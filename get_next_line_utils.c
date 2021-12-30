@@ -12,19 +12,6 @@
 
 #include "get_next_line.h"
 
-void	*ft_memset(void *s, int c, size_t n)
-{
-	unsigned char	*tmp;
-
-	tmp = s;
-	while (n-- > 0)
-	{
-		*tmp = c;
-		tmp++;
-	}
-	return (s);
-}
-
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	char	*d;
@@ -53,6 +40,18 @@ int	ft_strlen(const char *s)
 	while (*(str++))
 		len++;
 	return (len);
+}
+
+char	*ft_strdup(const char *s)
+{
+	const int	slen = ft_strlen(s);
+	char		*tmp;
+
+	tmp = (char *) malloc(sizeof(char) * slen + 1);
+	if (tmp == NULL)
+		return (NULL);
+	ft_memcpy(tmp, s, slen + 1);
+	return (tmp);
 }
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t size)

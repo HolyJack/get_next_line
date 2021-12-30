@@ -12,18 +12,6 @@
 
 #include "get_next_line.h"
 
-char	*ft_strdup(const char *s)
-{
-	const int	slen = ft_strlen(s);
-	char		*tmp;
-
-	tmp = (char *) malloc(sizeof(char) * slen + 1);
-	if (tmp == NULL)
-		return (NULL);
-	ft_memcpy(tmp, s, slen + 1);
-	return (tmp);
-}
-
 char	*ft_strchr(const char *s, int c)
 {
 	char	*str;
@@ -53,7 +41,6 @@ char	*ft_strjoin(const char *s1, char const *s2)
 	nstr = (char *) malloc(sizeof(char) * (s1_len + s2_len + 1));
 	if (nstr == NULL)
 		return (NULL);
-	ft_memset(nstr, '\0', s1_len + s2_len + 1);
 	ft_strlcpy(nstr, s1, s1_len + 1);
 	ft_strlcat(nstr, s2, s1_len + s2_len + 1);
 	return (nstr);
@@ -82,19 +69,11 @@ char	*ft_getline(char **reminder, int fd)
 	return (line);
 }
 
-char	*get_next_line(int fd)
+int	ft_read(char *reminder[], int fd, char *buf)
 {
-	char		*tmp;
-	char		*buf;
-	int			rdlen;
-	static char	*reminder[1024];
+	char	*tmp;
+	int		rdlen;
 
-	if (fd < 0)
-		return (NULL);
-	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buf)
-		return (NULL);
-	buf[BUFFER_SIZE] = '\0';
 	rdlen = read(fd, buf, BUFFER_SIZE);
 	while (rdlen > 0)
 	{
@@ -105,12 +84,28 @@ char	*get_next_line(int fd)
 		{
 			tmp = reminder[fd];
 			reminder[fd] = ft_strjoin(reminder[fd], buf);
-			free(reminder[fd]);
+			free(tmp);
 		}
 		if (ft_strchr(reminder[fd], '\n'))
 			break ;
 		rdlen = read(fd, buf, BUFFER_SIZE);
 	}
+	return (rdlen);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*reminder[1024];
+	char		*buf;
+	int			rdlen;
+
+	if (fd < 0)
+		return (NULL);
+	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buf)
+		return (NULL);
+	buf[BUFFER_SIZE] = '\0';
+	rdlen = ft_read(reminder, fd, buf);
 	free(buf);
 	if (rdlen < 0)
 		return (NULL);
