@@ -41,6 +41,7 @@ char	*ft_strjoin(const char *s1, char const *s2)
 	nstr = (char *) malloc(sizeof(char) * (s1_len + s2_len + 1));
 	if (nstr == NULL)
 		return (NULL);
+	nstr[s1_len + s2_len] = '\0';
 	ft_strlcpy(nstr, s1, s1_len + 1);
 	ft_strlcat(nstr, s2, s1_len + s2_len + 1);
 	return (nstr);
@@ -53,23 +54,28 @@ char	*ft_getline(char **reminder, int fd)
 	char	*eolptr;
 
 	eolptr = ft_strchr(reminder[fd], '\n');
-	if (!eolptr)
+	if (eolptr)
 	{
-		line = ft_strdup(reminder[fd]);
-		reminder[fd] = NULL;
-		return (line);
+		linelen = eolptr - reminder[fd] + 1;
+		line = malloc(sizeof(char) * (linelen + 1));
+		if (!line)
+			return (NULL);
+		line[linelen] = '\0';
+		ft_strlcpy(line, reminder[fd], linelen + 1);
 	}
-	linelen = eolptr - reminder[fd] + 1;
-	line = malloc(sizeof(char) * (linelen + 1));
-	if (!line)
-		return (NULL);
-	line[linelen] = '\0';
-	ft_memcpy(line, reminder[fd], linelen);
-	reminder[fd] = eolptr + 1;
+	else
+		line = ft_strdup(reminder[fd]);
+	if (eolptr && *(eolptr + 1))
+		ft_strlcpy(reminder[fd], eolptr + 1, ft_strlen(eolptr + 1) + 1);
+	else
+	{
+		free(reminder[fd]);
+		reminder[fd] = NULL;
+	}
 	return (line);
 }
 
-int	ft_read(char *reminder[], int fd, char *buf)
+int	ft_read(char **reminder, int fd, char *buf)
 {
 	char	*tmp;
 	int		rdlen;
@@ -85,6 +91,7 @@ int	ft_read(char *reminder[], int fd, char *buf)
 			tmp = reminder[fd];
 			reminder[fd] = ft_strjoin(reminder[fd], buf);
 			free(tmp);
+			tmp = NULL;
 		}
 		if (ft_strchr(reminder[fd], '\n'))
 			break ;
@@ -109,7 +116,7 @@ char	*get_next_line(int fd)
 	free(buf);
 	if (rdlen < 0)
 		return (NULL);
-	else if (reminder[fd] && *reminder[fd])
+	if (reminder[fd] && *reminder[fd])
 		return (ft_getline(reminder, fd));
 	return (NULL);
 }
