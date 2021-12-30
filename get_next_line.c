@@ -19,9 +19,7 @@ char	*ft_strdup(const char *s)
 
 	tmp = (char *) malloc(sizeof(char) * slen + 1);
 	if (tmp == NULL)
-	{
 		return (NULL);
-	}
 	ft_memcpy(tmp, s, slen + 1);
 	return (tmp);
 }
@@ -76,6 +74,8 @@ char	*ft_getline(char **reminder, int fd)
 	}
 	linelen = eolptr - reminder[fd] + 1;
 	line = malloc(sizeof(char) * (linelen + 1));
+	if (!line)
+		return (NULL);
 	line[linelen] = '\0';
 	ft_memcpy(line, reminder[fd], linelen);
 	reminder[fd] = eolptr + 1;
@@ -84,13 +84,17 @@ char	*ft_getline(char **reminder, int fd)
 
 char	*get_next_line(int fd)
 {
+	char		*tmp;
 	char		*buf;
 	int			rdlen;
 	static char	*reminder[1024];
 
-	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buf || fd < 0)
+	if (fd < 0)
 		return (NULL);
+	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buf)
+		return (NULL);
+	buf[BUFFER_SIZE] = '\0';
 	rdlen = read(fd, buf, BUFFER_SIZE);
 	while (rdlen > 0)
 	{
@@ -98,7 +102,11 @@ char	*get_next_line(int fd)
 		if (!reminder[fd])
 			reminder[fd] = ft_strdup(buf);
 		else
+		{
+			tmp = reminder[fd];
 			reminder[fd] = ft_strjoin(reminder[fd], buf);
+			free(reminder[fd]);
+		}
 		if (ft_strchr(reminder[fd], '\n'))
 			break ;
 		rdlen = read(fd, buf, BUFFER_SIZE);
@@ -106,7 +114,7 @@ char	*get_next_line(int fd)
 	free(buf);
 	if (rdlen < 0)
 		return (NULL);
-	else if (reminder[fd])
+	else if (reminder[fd] && *reminder[fd])
 		return (ft_getline(reminder, fd));
 	return (NULL);
 }
