@@ -6,11 +6,11 @@
 /*   By: ejafer <ejafer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 09:27:09 by ejafer            #+#    #+#             */
-/*   Updated: 2022/01/08 19:43:57 by ejafer           ###   ########.fr       */
+/*   Updated: 2022/03/18 17:07:14 by ejafer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -102,7 +102,7 @@ int	ft_read(char **reminder, int fd, char *buf)
 
 char	*get_next_line(int fd)
 {
-	static char	*reminder[1024];
+	static char	*reminder[OPEN_MAX];
 	char		*buf;
 	int			rdlen;
 

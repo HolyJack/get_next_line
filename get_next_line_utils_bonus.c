@@ -6,11 +6,11 @@
 /*   By: ejafer <ejafer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 10:24:45 by ejafer            #+#    #+#             */
-/*   Updated: 2022/01/08 19:44:00 by ejafer           ###   ########.fr       */
+/*   Updated: 2022/03/18 17:07:17 by ejafer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
