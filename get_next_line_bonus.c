@@ -6,7 +6,7 @@
 /*   By: ejafer <ejafer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/08 09:27:09 by ejafer            #+#    #+#             */
-/*   Updated: 2022/03/18 17:07:14 by ejafer           ###   ########.fr       */
+/*   Updated: 2022/03/18 17:21:11 by ejafer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	ft_read(char **reminder, int fd, char *buf)
 
 char	*get_next_line(int fd)
 {
-	static char	*reminder[OPEN_MAX];
+	static char	*reminder[OPEN_MAX + 1];
 	char		*buf;
 	int			rdlen;
 
